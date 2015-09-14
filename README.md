@@ -1,0 +1,1 @@
+This git repository is a copy work of http://www.buildyourownlisp.com/ which aims at to learn Lisp implementation as well as C.
