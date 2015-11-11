@@ -21,7 +21,6 @@ void add_history(char* unused) {}
 #endif
 
 /* Parser Declariations */
-
 mpc_parser_t* Number; 
 mpc_parser_t* Symbol; 
 mpc_parser_t* String; 
@@ -31,15 +30,14 @@ mpc_parser_t* Qexpr;
 mpc_parser_t* Expr; 
 mpc_parser_t* Lispy;
 
-/* Forward Declarations */
 
+/* Forward Declarations */
 struct lval;
 struct lenv;
 typedef struct lval lval;
 typedef struct lenv lenv;
 
 /* Lisp Value */
-
 enum { LVAL_ERR, LVAL_NUM,   LVAL_SYM, LVAL_STR, 
        LVAL_FUN, LVAL_SEXPR, LVAL_QEXPR };
        
@@ -178,17 +176,17 @@ lval* lval_copy(lval* v) {
         x->formals = lval_copy(v->formals);
         x->body = lval_copy(v->body);
       }
-    break;
+      break;
     case LVAL_NUM: x->num = v->num; break;
     case LVAL_ERR: x->err = malloc(strlen(v->err) + 1);
       strcpy(x->err, v->err);
-    break;
+      break;
     case LVAL_SYM: x->sym = malloc(strlen(v->sym) + 1);
       strcpy(x->sym, v->sym);
-    break;
+      break;
     case LVAL_STR: x->str = malloc(strlen(v->str) + 1);
       strcpy(x->str, v->str);
-    break;
+      break;
     case LVAL_SEXPR:
     case LVAL_QEXPR:
       x->count = v->count;
@@ -196,7 +194,7 @@ lval* lval_copy(lval* v) {
       for (int i = 0; i < x->count; i++) {
         x->cell[i] = lval_copy(v->cell[i]);
       }
-    break;
+      break;
   }
   return x;
 }
@@ -751,6 +749,7 @@ lval* lval_call(lenv* e, lval* f, lval* a) {
       break;
     }
     
+	//bind symbol before &rest
     lval* val = lval_pop(a, 0);    
     lenv_put(f->env, sym, val);    
     lval_del(sym); lval_del(val);
@@ -758,6 +757,7 @@ lval* lval_call(lenv* e, lval* f, lval* a) {
   
   lval_del(a);
   
+  //bind symbol in &rest list
   if (f->formals->count > 0 &&
     strcmp(f->formals->cell[0]->sym, "&") == 0) {
     
