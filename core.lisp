@@ -88,6 +88,11 @@
     {if (== x (fst l)) {true} {elem x (tail l)}}
 })
 
+; Progn
+(fun {progn & l} {
+    last (map eval l)
+})
+
 ; Apply Function to List
 (fun {map f l} {
   if (== l nil)
@@ -139,3 +144,13 @@
     { otherwise {+ (fib (- n 1)) (fib (- n 2))} }
 })
 
+
+(fun {show-list & l} {
+    if (== nil 1)
+      {print false}
+      {progn
+        (print 1)
+        (print 2)
+        (eval {+ 1 2}
+      }
+})
